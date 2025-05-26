@@ -1,4 +1,4 @@
-Currently, this is a backend for tournament grid that can be saved in database
+Currently, this is a backend for tournament grid that can be saved in database, implemented with gRPC and mongodb.
 
 Run: docker compose up
 
