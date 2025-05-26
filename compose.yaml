@@ -1,0 +1,45 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=loader
+      - MONGO_INITDB_ROOT_PASSWORD=12345678
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+
+  mongo-monitoring:
+    image: mongo-express
+    restart: always
+    environment:
+        - ME_CONFIG_BASICAUTH_PASSWORD=12345678
+        - ME_CONFIG_BASICAUTH_USERNAME=admin 
+        - ME_CONFIG_MONGODB_SERVER=mongo
+        - ME_CONFIG_MONGODB_ADMINUSERNAME=loader
+        - ME_CONFIG_MONGODB_ADMINPASSWORD=12345678
+    depends_on:
+        - mongo
+    ports:
+        - 8081:8081
+  
+  back-end:
+    build: backend/
+    environment:
+      - MONGO_DB_TOUR=Tournaments
+      - MONGO_COLLECTION_TOUR=Tournaments
+      - MONGO_URL=mongo
+      - MONGO_PORT=27017
+      - MONGODB_LOGIN=loader
+      - MONGODB_PASSWORD=12345678
+    ports:
+      - 4999:4999
+      - 5000:5000
+      - 5001:5001
+    depends_on: 
+      - mongo
+
+
+volumes:
+  mongodb_data:
